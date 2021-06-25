@@ -1,0 +1,35 @@
+  .main:
+	addi $a1, $zero, 3			
+	add $a0, $zero, $a1			
+	jal calculaGanhos			
+	add $t0, $zero, $v0			
+	addi $a2, $zero, 2			
+	add $a0, $zero, $a2			
+	jal calculaGanhos			
+	add $t1, $zero, $v0			
+	addi $a3, $zero, 5			
+	add $a0, $zero, $a3			
+	jal calculaGanhos			
+	add $t2, $zero, $v0			
+	add $t3, $zero, $t0			
+	add $t3, $t3, $t1			
+	add $t3, $t3, $t2			
+	j Fim					
+
+
+calculaGanhos:
+	add $t4, $zero, $t4 			
+	add $t5, $zero, $t5			
+	Loop:
+		beq $a0, $t4, Fim2		
+		addi $t5, $t5, 500		
+		addi $t4, $zero, 1 		
+		j Loop				
+	Fim2:
+		add $v0, $zero, $t5		
+		jr $ra				
+	
+Fim:
+
+j $ra 
+li $st3
