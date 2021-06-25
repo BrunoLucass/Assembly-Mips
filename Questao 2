@@ -1,0 +1,46 @@
+  .data
+    
+    addi $t2, $zero, $zero        
+    addi $t3, $zero, $zero	     
+    addi $t4, $zero, $zero	      
+    addi $t5, $zero, 396 	        	
+    addi $t7, $zero, $zero        
+    addi $t8, $zero, 5	          	
+    addi $t9, $zero, 100 	        
+
+.text
+   beq $t7, $t9, Fim		      
+  
+add $t4, $t4, $a1 	           	
+add $t5, $t5, $a2 	          	
+add $t3, $t3, $a3 	          	
+
+lw $t0, 0 ($t4) 	            	
+lw $t1, 0($t5)		            
+beq $t0, $t8, Fim	           	
+beq $t1, $t8, Fim	          	
+slt  $t6, $t1, $t0 	          
+bne $t6, $zero, Loop	          	
+beq $t6, $zero, Loop2 		        
+
+
+Loop:      	
+sw $t0, 0($t3) 		            	
+addi $t2, $t2, 1 	            	
+j Loop3
+
+Loop2: 			
+sw $t1, 0($t3) 			           
+addi $t2, $t2, 1 	            	
+j L3
+
+Loop3: 			
+addi $t4, $t4, 4 		          
+addi $t5, $t5, -4 	         
+addi $t3, $t3, 4 		           
+addi $t7, $t7, 1 	           
+j Proc1
+
+Fim:
+add $v0, $zero, $t7
+jr $ra
