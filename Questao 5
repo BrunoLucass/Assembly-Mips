@@ -1,0 +1,42 @@
+# byte 8
+#sb
+#lb
+# x <= 10 ou <20
+.data 
+  array: .align 0
+  .space 50
+
+
+.text
+   
+   move $s1, $zero # indice do array
+   move $s0, $zero # valor a ser colocado no array
+   li $t2, 50 #tamanho do array
+   li $t3, 10 # valores para  comparar
+   li $t4, 20
+   
+   loop:
+   beq $s1, $t2, saiDoLoop
+   bge $t1, $t3, salva
+   btl $s1, $t4, salva
+   j loop
+   
+   salva:
+   sb $s0, array($s1)
+   addi $s1, $s1, 1
+   addi $s0, $s0,1
+   
+   saiDoLoop:
+   move $s1, $zero
+   imprime:
+   beq $s1, $st2, saiDaImpressao
+   li $v0, 1
+   lb $a0, array($s1)
+   syscall
+   addi $s1, $s1,1
+   j imprime
+   
+   saiDaImpressao:
+   
+   li$v0,19
+   syscall
