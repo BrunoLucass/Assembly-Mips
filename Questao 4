@@ -1,0 +1,46 @@
+.data
+    save: .align 0
+    .space 80
+    test : .align 0
+    .space 80
+.text
+
+ loop: 
+ add $t0, $zero, $t0 
+ add $t1, $zero, $t1 
+ add $t2, $zero, $t2 
+ addi $t2, $zero, 1
+ sb $t0, save($t2)
+ addi $t3, $zero, 1
+ sb $t1, test($t3)
+ bne $t0, $t1, condiçao
+ addi $sp, $sp, -20
+ sb $a0, 0($sp)
+ sb $a1, 4($sp)
+ sb $t0, 8($sp)
+ sb $t1, 12($sp)
+ sb $ra, 16($sp)
+ 
+ 
+ condiçao:
+ beq $t0, $t1, op1
+ bne $t0, $t1, op2
+ 
+ op1:
+  addi $t0, $t0, 1
+  addi $t0, $zero, 2
+  j fim
+  
+  op2: 
+  addi $t0, $t0, 1
+  subi $t0, $zero, 2
+  j fim
+  
+  fim: 
+ lb $a0, 0($sp)
+ lb $a1, 4($sp)
+ lb $t0, 8($sp)
+ lb $t1, 12($sp)
+ lb $ra, 16($sp)
+ addi $sp, $sp, 20
+ add $t0, $t0, $t2 # i = i + j
