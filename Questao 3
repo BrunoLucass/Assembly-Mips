@@ -1,0 +1,104 @@
+.text
+	addi $t0, $zero, 3			#a
+	addi $t1, $zero, 6			#b
+	
+	#if(b>V[4])
+	addi $t2, $zero, 4			
+	add $t2, $t2, $t2
+	add $t2, $t2, $t2			
+	add $t2, $t2, $a1			
+	lw $t3, 0($t2)				
+	slt $t4, $t3, $t1			
+	beq $t4, $zero, Finish			
+	
+	#While(M[5]>(Proc2(a, j)*Proc3(b))
+	Loop:
+		addi $t5, $zero, 5
+		add $t5, $t5, $t5
+		add $t5, $t5, $t5		
+		add $t5, $t5, $a0		
+		lw $t6, 0($t5)			
+		addi $sp, $sp, -36		
+		sw $a0, 0($sp)			
+		sw $a1, 4($sp)			
+		sw $a3, 8($sp)			
+		sw $t0, 12($sp)			
+		sw $t1, 16($sp)		
+		sw $t2, 20($sp)			
+		sw $t6, 24($sp)			
+		sw $ra, 32($sp)			
+		add $a2, $a3, $zero		
+		add $a3, $t0, $zero		
+		jal Proc2			
+		sw $v0, 28($sp)			
+		lw $a0, 16($sp)		
+		jal Proc 3			
+		add $t7, $zero, $v0		
+		lw $t1, 28($sp)			
+
+		#proc2 * proc3
+		add $t3, $zero, $t3		
+		add $t2, $zero, $t2 		
+		Loop2:
+			beq $t7, $t2, Exit2	
+			add $t3, $t3, $t1
+			addi $t2, $zero, 1 	
+			j Loop2			
+			
+		Exit2:
+			lw $t4, 24($sp)		
+			slt $t5, $t3, $t4	
+			beq $t5, $zero, Exit	
+			
+		#a=(M[5]+b)
+		lw $t6, 12($sp)			
+		lw $t7, 16($sp)			
+		add $t0, $t4, $t7		
+		lw $a0, 0($sp)			
+		lw $a1, 4($sp)		
+		lw $a3, 8($sp)		
+		lw $t1, 16($sp)			
+		lw $t2, 20($sp)			
+		lw $ra, 32($sp)			
+		addi $sp, $sp, 36		
+		j Loop				
+	
+	#Proc3(b) e Proc2(a, j)
+	Exit:
+	addi $sp, $sp, -24			
+	sw $a1, 0($sp)				
+	sw $a3, 4($sp)			
+	sw $t0, 8($sp)				
+	sw $t2, 12($sp)				
+	sw $ra, 16($sp)				
+	add $a0, $zero, $t1		
+	jal Proc 3				
+	lw $a2, 4($sp)				
+	lw $a3, 8($sp)				
+	sw $v0, 20($sp)				
+	jal Proc2			
+	add $t0, $zero, $v0			
+	lw $t1, 20($sp)				
+	lw $a1, 0($sp)				
+	lw $t2, 12($sp)				
+	lw $ra, 16($sp)			
+	addi $sp, $sp, 24			
+	
+	#proc3 / proc2
+	add $t4, $zero, $t4 			
+	Loop3:
+		slt $t5, $t1, $t0		
+		beq $t5, $zero, Exit3	
+		sub $t1, $t1, $t0		
+		addi $t4, $zero, 1 		
+		j Loop3				
+	
+	#V[4]=(Proc3(b) / Proc2(a, j))
+	Exit3:
+		sw $t4, 0($t2)			
+	
+	#return a, V[4]
+	finish:
+		add $v0, $zero, $t0		
+		lw $v1, 0($t2)			
+		jr $ra		
